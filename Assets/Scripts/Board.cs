@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 public class Board
 {
+    public event EventHandler<PiecePlacedEventArgs> PiecePlaced;
+    public event EventHandler<PieceMovedEventArgs> PieceMoved;
+    public event EventHandler<PieceTakenEventArgs> PieceTaken;
+
     private Dictionary<Hex, PieceView> _pieces = new Dictionary<Hex, PieceView>();
     private int _size;
 
@@ -28,7 +32,7 @@ public class Board
         if (_pieces.ContainsValue(piece)) return false;
 
         _pieces.Add(position, piece);
-
+        OnPiecePlaced(new PiecePlacedEventArgs(position, piece));
         return true;
     }
 
@@ -40,7 +44,7 @@ public class Board
 
         _pieces.Remove(fromPosition);
         _pieces.Add(toPosition, piece);
-
+        OnPieceMoved(new PieceMovedEventArgs(fromPosition, toPosition, piece));
         return true;
     }
 
@@ -50,7 +54,59 @@ public class Board
         if (!_pieces.TryGetValue(position, out var piece)) return false;
 
         _pieces.Remove(position);
-
+        OnPieceTaken(new PieceTakenEventArgs(position, piece));
         return true;
+    }
+
+    protected virtual void OnPiecePlaced(PiecePlacedEventArgs args)
+    {
+        var handler = PiecePlaced;
+        handler?.Invoke(this, args);
+    }
+    protected virtual void OnPieceMoved(PieceMovedEventArgs args)
+    {
+        var handler = PieceMoved;
+        handler?.Invoke(this, args);
+    }
+    protected virtual void OnPieceTaken(PieceTakenEventArgs args)
+    {
+        var handler = PieceTaken;
+        handler?.Invoke(this, args);
+    }
+}
+
+public class PiecePlacedEventArgs : EventArgs
+{
+    public Hex Position { get; }
+    public PieceView Piece { get; }
+
+    public PiecePlacedEventArgs(Hex position, PieceView piece)
+    {
+        Position = position;
+        Piece = piece;
+    }
+}
+public class PieceMovedEventArgs : EventArgs
+{
+    public Hex FromPosition { get; }
+    public Hex ToPosition { get; }
+    public PieceView Piece { get; }
+
+    public PieceMovedEventArgs(Hex fromPosition, Hex toPosition, PieceView piece)
+    {
+        FromPosition = fromPosition;
+        ToPosition = toPosition;
+        Piece = piece;
+    }
+}
+public class PieceTakenEventArgs : EventArgs
+{
+    public Hex Position { get; }
+    public PieceView Piece { get; }
+
+    public PieceTakenEventArgs(Hex position, PieceView piece)
+    {
+        Position = position;
+        Piece = piece;
     }
 }
