@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Hex
+public struct Hex
 {
     // implementation inspired by https://www.redblobgames.com/grids/hexagons/
     // Using Axial coordinate system for hexagonal tiles with pointy-top orientation.
 
     private const float Spacing = 1f;
 
-    public int q;
-    public int r;
+    public readonly int q;
+    public readonly int r;
     public int s => -q - r;
     public Hex[] Neighbours => new Hex[]
     {
@@ -46,9 +46,10 @@ public class Hex
     public Hex[] GetNeighboursInRange(int range)
     {
         List<Hex> results = new List<Hex>();
-        for (int q = this.q - range; q <= this.q + range; q++)
-            for (int r = this.r - range; r <= this.r + range; r++)
-                results.Add(new Hex(q, r));
+        for (int q = -range; q <= range; q++)
+            for (int r = Mathf.Max(-range, -range - q); r <= Mathf.Min(range, range - q); r++)
+                results.Add(this + new Hex(q, r));
+
         return results.ToArray();
     }
 
@@ -61,6 +62,8 @@ public class Hex
     }
 
     private static Hex Round(float q, float r) => new Hex(Mathf.RoundToInt(q), Mathf.RoundToInt(r));
+
+    public static readonly Hex zero = new Hex(0, 0);
 
     public static readonly Hex right = new Hex(1, 0);
     public static readonly Hex upRight = new Hex(0, 1);
@@ -76,11 +79,21 @@ public class Hex
     public static readonly Hex diagonalDown = new Hex(1, -2);
     public static readonly Hex diagonalDownRight = new Hex(2, -1);
 
+    public override bool Equals(object obj)
+    {
+        if (obj is Hex other)
+            return q == other.q && r == other.r;
+        return false;
+    }
+    public override int GetHashCode() => HashCode.Combine(q, r);
+    public override string ToString() => $"Hex({q}, {r})";
+
+
     public static Hex operator +(Hex a) => a;
     public static Hex operator -(Hex a) => new Hex(-a.q, -a.r);
     public static Hex operator +(Hex a, Hex b) => new Hex(a.q + b.q, a.r + b.r);
     public static Hex operator -(Hex a, Hex b) => a + (-b);
     public static Hex operator *(Hex a, int d) => new Hex(a.q * d, a.r * d);
-    public static bool operator ==(Hex a, Hex b) => a.q == b.q && a.r == b.r;
-    public static bool operator !=(Hex a, Hex b) => !(a == b);
+    public static bool operator ==(Hex a, Hex b) => a.Equals(b);
+    public static bool operator !=(Hex a, Hex b) => !a.Equals(b);
 }
