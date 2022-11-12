@@ -19,16 +19,9 @@ public class BoardView : MonoBehaviour
 
     public event EventHandler<BoardClickEventArgs> Click;
 
-    private void OnEnable()
+    public void TileClick(TileView tileView)
     {
-        foreach (TileView tileView in GetComponentsInChildren<TileView>())
-            tileView.Click += OnTileClick;
-    }
-
-    private void OnTileClick(object sender, EventArgs e)
-    {
-        if (sender is TileView tileView)
-            OnClick(new BoardClickEventArgs(tileView.HexPosition));
+        OnClick(new BoardClickEventArgs(tileView.HexPosition));
     }
 
     private void OnClick(BoardClickEventArgs e)

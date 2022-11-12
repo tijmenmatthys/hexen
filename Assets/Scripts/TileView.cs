@@ -6,17 +6,17 @@ using UnityEngine.EventSystems;
 
 public class TileView : MonoBehaviour, IPointerClickHandler
 {
-    public event EventHandler Click;
-    public Hex HexPosition => Hex.FromWorldPosition(transform.position);
+    private BoardView _boardView;
+
+    public Hex HexPosition => Hex.HexPosition(transform.position);
+
+    private void Awake()
+    {
+        _boardView = GetComponentInParent<BoardView>();
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        OnClick(EventArgs.Empty);
-    }
-
-    private void OnClick(EventArgs e)
-    {
-        var handler = Click;
-        handler?.Invoke(this, e);
+        _boardView.TileClick(this);
     }
 }

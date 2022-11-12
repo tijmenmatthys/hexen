@@ -54,7 +54,7 @@ public struct Hex
     }
 
     public static int Distance(Hex a, Hex b) => (a - b).Length;
-    public static Hex FromWorldPosition(Vector3 worldPosition)
+    public static Hex HexPosition(Vector3 worldPosition)
     {
         float q = (Mathf.Sqrt(3) / 3 * worldPosition.x - 1f / 3 * worldPosition.z) / Spacing;
         float r = 2f / 3 * worldPosition.z / Spacing;
