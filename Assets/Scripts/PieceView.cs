@@ -1,18 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PieceView : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public Vector3 WorldPosition => transform.position;
 
-    // Update is called once per frame
-    void Update()
+    public void Placed(Vector3 worldPosition)
     {
-        
+        transform.position = worldPosition;
+        gameObject.SetActive(true);
+    }
+    public void Moved(Vector3 fromWorldPosition, Vector3 toWorldPosition)
+    {
+        transform.position = toWorldPosition;
+    }
+    public void Taken()
+    {
+        gameObject.SetActive(false);
     }
 }

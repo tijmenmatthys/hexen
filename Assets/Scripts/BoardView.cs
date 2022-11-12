@@ -3,23 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardClickEventArgs : EventArgs
-{
-    public Hex Position { get; }
-    public BoardClickEventArgs(Hex position)
-    {
-        Position = position;
-    }
-}
-
 public class BoardView : MonoBehaviour
 {
+    public event EventHandler<BoardClickEventArgs> Click;
+
     [SerializeField] private int _size = 5;
     [SerializeField] GameObject _TilePrefab;
 
-    public event EventHandler<BoardClickEventArgs> Click;
+    public int Size { get { return _size; } }
 
-    public void TileClick(TileView tileView)
+    public void TileClicked(TileView tileView)
     {
         OnClick(new BoardClickEventArgs(tileView.HexPosition));
     }
@@ -50,5 +43,14 @@ public class BoardView : MonoBehaviour
             tile.transform.position = hex.WorldPosition;
             tile.name = "Tile" + hex.ToString();
         }
+    }
+}
+
+public class BoardClickEventArgs : EventArgs
+{
+    public Hex Position { get; }
+    public BoardClickEventArgs(Hex position)
+    {
+        Position = position;
     }
 }

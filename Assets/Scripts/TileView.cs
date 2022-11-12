@@ -17,6 +17,6 @@ public class TileView : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        _boardView.TileClick(this);
+        _boardView.TileClicked(this);
     }
 }
