@@ -24,6 +24,11 @@ namespace GameSystem
             var boardView = FindObjectOfType<BoardView>();
             boardView.Click += BoardClicked;
 
+            // subscribe to DeckView events
+            var deckView = FindObjectOfType<DeckView>();
+            deckView.CardDrag += CardDragged;
+            deckView.CardDrop += CardDropped;
+
             // subscribe to Board(Model) events
             _board = new Board<PieceView>(boardView.Size);
             _board.PiecePlaced += (s, e)
@@ -37,6 +42,16 @@ namespace GameSystem
             var pieceViews = FindObjectsOfType<PieceView>();
             foreach (var pieceView in pieceViews)
                 _board.Place(Hex.HexPosition(pieceView.WorldPosition), pieceView);
+        }
+
+        private void CardDropped(object sender, CardEventArgs e)
+        {
+            Debug.Log($"Card {e.CardNumber} dropped over {e.Position}");
+        }
+
+        private void CardDragged(object sender, CardEventArgs e)
+        {
+            Debug.Log($"Card {e.CardNumber} dragged over {e.Position}");
         }
 
         private void BoardClicked(object sender, BoardClickEventArgs e)
