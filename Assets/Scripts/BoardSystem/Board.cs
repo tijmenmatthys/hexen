@@ -15,6 +15,8 @@ namespace BoardSystem
         private Dictionary<Hex, TPiece> _pieces = new Dictionary<Hex, TPiece>();
         private int _size;
 
+        public int Size => _size;
+
         public Board(int size)
         {
             _size = size;
@@ -22,6 +24,20 @@ namespace BoardSystem
 
         public bool TryGetPiece(Hex position, out TPiece piece)
             => _pieces.TryGetValue(position, out piece);
+
+        public Hex[] GetOccupiedPositions()
+            => _pieces.Keys.ToArray();
+
+        public Hex[] GetEmptyPositions()
+        {
+            Hex[] allPositions = Hex.zero.GetNeighboursInRange(_size);
+            List<Hex> emptyPositions = new List<Hex>();
+            foreach (Hex position in allPositions)
+                if (!TryGetPiece(position, out var piece))
+                    emptyPositions.Add(position);
+
+            return emptyPositions.ToArray();
+        }
 
         public bool IsValid(Hex position)
             => position.Length <= _size;
@@ -40,7 +56,9 @@ namespace BoardSystem
 
         public bool Move(Hex fromPosition, Hex toPosition)
         {
-            if (!IsValid(toPosition)) return false;
+            if (!IsValid(fromPosition)) return false;
+            if (!IsValid(toPosition))
+                return Take(fromPosition);
             if (_pieces.ContainsKey(toPosition)) return false;
             if (!_pieces.TryGetValue(fromPosition, out var piece)) return false;
 

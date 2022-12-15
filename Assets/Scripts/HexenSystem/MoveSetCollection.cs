@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BoardSystem;
+using HexenSystem.MoveSets;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +13,17 @@ namespace HexenSystem
         private Dictionary<CardType, MoveSet<TPiece>> _moveSets
             = new Dictionary<CardType,MoveSet<TPiece>>();
 
+        public MoveSetCollection(Board<TPiece> board)
+        {
+            _moveSets.Add(CardType.Teleport, new TeleportMoveSet<TPiece>(board));
+            _moveSets.Add(CardType.Slash, new SlashMoveSet<TPiece>(board));
+            _moveSets.Add(CardType.Push, new PushMoveSet<TPiece>(board));
+            _moveSets.Add(CardType.Shoot, new ShootMoveSet<TPiece>(board));
+        }
+
         public bool TryGetMoveSet(CardType card, out MoveSet<TPiece> moveSet)
             => _moveSets.TryGetValue(card, out moveSet);
+
+        public MoveSet<TPiece> this[CardType card] => _moveSets[card];
     }
 }

@@ -9,18 +9,31 @@ namespace GameSystem.Views
 {
     public class CardView : MonoBehaviour, IDragHandler, IEndDragHandler
     {
-        [SerializeField] private Sprite sprite;
-
         [SerializeField] private GameObject _staticCard;
         [SerializeField] private LayerMask _dropLayer;
+
+        [SerializeField] private List<Sprite> _sprites;
+        [SerializeField] private List<CardType> _types;
 
         private Camera _camera;
         private RectTransform _rectTransform;
         private Vector3 _startPosition;
         private DeckView _deckView;
         private GameObject _lastObjectBelowMouse;
+        private CardType _type;
 
-        public int CardNumber { get; set; }
+        public int Index { get; set; }
+        public CardType Type
+        {
+            get { return _type; }
+            set
+            {
+                _type = value;
+                Sprite sprite = _sprites[_types.IndexOf(value)];
+                GetComponent<Image>().sprite = sprite;
+                _staticCard.GetComponent<Image>().sprite = sprite;
+            }
+        }
 
         private void Awake()
         {
@@ -30,22 +43,22 @@ namespace GameSystem.Views
             _deckView = transform.parent.parent.GetComponent<DeckView>();
         }
 
-        private void OnValidate()
+        public void Hide(bool hide)
         {
-            GetComponent<Image>().sprite = sprite;
-            _staticCard.GetComponent<Image>().sprite = sprite;
+            if (hide) _staticCard.SetActive(false);
+            else _staticCard.SetActive(true);
         }
 
         public void OnDrag(PointerEventData eventData)
         {
             _rectTransform.position = eventData.position;
 
-            if (TryGetGameObjectBelowMouse(out var gameObject)
-                && gameObject != _lastObjectBelowMouse)
+            if (TryGetGameObjectBelowMouse(out var currentObjectBelowMouse)
+                && currentObjectBelowMouse != _lastObjectBelowMouse)
             {
-                _lastObjectBelowMouse = gameObject;
-                TileView tile = gameObject.GetComponent<TileView>();
-                _deckView.CardDragged(CardNumber, tile.HexPosition);
+                _lastObjectBelowMouse = currentObjectBelowMouse;
+                TileView tile = currentObjectBelowMouse.GetComponent<TileView>();
+                _deckView.CardDragged(Index, Type, tile.HexPosition);
             }
         }
 
@@ -56,7 +69,7 @@ namespace GameSystem.Views
             if (_lastObjectBelowMouse != null)
             {
                 TileView tile = _lastObjectBelowMouse.GetComponent<TileView>();
-                _deckView.CardDropped(CardNumber, tile.HexPosition);
+                _deckView.CardDropped(Index, Type, tile.HexPosition);
             }
         }
 

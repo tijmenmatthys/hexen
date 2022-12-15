@@ -45,7 +45,7 @@ MeshCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -8346165415803462366, guid: 2a0c611552998494c83c6430b1102bc4, type: 3}
 --- !u!114 &-2317313460468121565
@@ -60,6 +60,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d09d4aa024714524e91edd16a33c33cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnDehighlight:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8888139417944638847}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_material
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2100000, guid: d475b0a767383924c98f3ec506ce4558, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHighlightValidDrop:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8888139417944638847}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_material
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2100000, guid: 04ea82b8f31dbef4f889e165cfdc9049, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnHighlightInfluence:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8888139417944638847}
+        m_TargetAssemblyTypeName: UnityEngine.Renderer, UnityEngine
+        m_MethodName: set_material
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2100000, guid: c0b6af351bf3d8c4ebd55f6c08c96837, type: 2}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Material, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &8703168561561012541
 GameObject:
   m_ObjectHideFlags: 0

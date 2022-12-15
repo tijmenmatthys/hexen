@@ -1,4 +1,5 @@
 using BoardSystem;
+using HexenSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,39 +9,63 @@ namespace GameSystem.Views
 {
     public class DeckView : MonoBehaviour
     {
-        public EventHandler<CardEventArgs> CardDrag;
-        public EventHandler<CardEventArgs> CardDrop;
+        public EventHandler<CardViewEventArgs> CardDrag;
+        public EventHandler<CardViewEventArgs> CardDrop;
 
-        public void CardDragged(int cardNumber, Hex position)
+        private List<CardView> _cardViews = new List<CardView>();
+
+        public int Size => _cardViews.Count;
+
+        private void OnEnable()
         {
-            OnCardDrag(new CardEventArgs(cardNumber, position));
+            foreach (CardView cardview in GetComponentsInChildren<CardView>())
+                _cardViews.Add(cardview);
         }
 
-        public void CardDropped(int cardNumber, Hex position)
+        public void OnDeckChanged(object sender, EventArgs e)
         {
-            OnCardDrop(new CardEventArgs(cardNumber, position));
+            List<CardType> newDeck = ((Deck<CardType>)sender).VisibleCards;
+            foreach (CardView cardView in _cardViews)
+                cardView.Hide(true);
+            for (int i = 0; i < newDeck.Count; i++)
+            {
+                _cardViews[i].Hide(false);
+                _cardViews[i].Type = newDeck[i];
+                _cardViews[i].Index = i;
+            }
         }
 
-        private void OnCardDrag(CardEventArgs e)
+        public void CardDragged(int index, CardType type, Hex position)
+        {
+            OnCardDrag(new CardViewEventArgs(index, type, position));
+        }
+
+        public void CardDropped(int index, CardType type, Hex position)
+        {
+            OnCardDrop(new CardViewEventArgs(index, type, position));
+        }
+
+        private void OnCardDrag(CardViewEventArgs e)
         {
             var handler = CardDrag;
             handler?.Invoke(this, e);
         }
-        private void OnCardDrop(CardEventArgs e)
+        private void OnCardDrop(CardViewEventArgs e)
         {
             var handler = CardDrop;
             handler?.Invoke(this, e);
         }
     }
-
-    public class CardEventArgs
+    public class CardViewEventArgs
     {
-        public int CardNumber { get; }
+        public int Index { get; }
+        public CardType Type { get; }
         public Hex Position { get; }
 
-        public CardEventArgs(int cardNumber, Hex position)
+        public CardViewEventArgs(int index, CardType type, Hex position)
         {
-            CardNumber = cardNumber;
+            Index = index;
+            Type = type;
             Position = position;
         }
     }

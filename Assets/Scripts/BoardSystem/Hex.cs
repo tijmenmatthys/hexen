@@ -54,6 +54,10 @@ namespace BoardSystem
 
             return results.ToArray();
         }
+        public Hex RotateLeft() => new Hex(-s, -q);
+        public Hex RotateRight() => new Hex(-r, -s);
+        public Hex RotateLeftAround(Hex center) => (this - center).RotateLeft() + center;
+        public Hex RotateRightAround(Hex center) => (this - center).RotateRight() + center;
 
         public static int Distance(Hex a, Hex b) => (a - b).Length;
         public static Hex HexPosition(Vector3 worldPosition)
@@ -62,8 +66,13 @@ namespace BoardSystem
             float r = 2f / 3 * worldPosition.z / Spacing;
             return Round(q, r);
         }
-
-        private static Hex Round(float q, float r) => new Hex(Mathf.RoundToInt(q), Mathf.RoundToInt(r));
+        public static Hex[] Line(Hex startPosition, Hex direction, int length)
+        {
+            List<Hex> line = new List<Hex>();
+            for (int i = 0; i <= length; i++)
+                line.Add(startPosition + i * direction);
+            return line.ToArray();
+        }
 
         public static readonly Hex zero = new Hex(0, 0);
 
@@ -89,14 +98,15 @@ namespace BoardSystem
         }
         public override int GetHashCode() => HashCode.Combine(q, r);
         public override string ToString() => $"Hex({q}, {r})";
-
-
         public static Hex operator +(Hex a) => a;
         public static Hex operator -(Hex a) => new Hex(-a.q, -a.r);
         public static Hex operator +(Hex a, Hex b) => new Hex(a.q + b.q, a.r + b.r);
         public static Hex operator -(Hex a, Hex b) => a + (-b);
         public static Hex operator *(Hex a, int d) => new Hex(a.q * d, a.r * d);
+        public static Hex operator *(int d, Hex a) => a * d;
         public static bool operator ==(Hex a, Hex b) => a.Equals(b);
         public static bool operator !=(Hex a, Hex b) => !a.Equals(b);
+
+        private static Hex Round(float q, float r) => new Hex(Mathf.RoundToInt(q), Mathf.RoundToInt(r));
     }
 }
