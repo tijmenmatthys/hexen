@@ -12,8 +12,10 @@ namespace GameSystem.Views
         public EventHandler<CardViewEventArgs> CardDrag;
         public EventHandler<CardViewEventArgs> CardDrop;
 
+        [SerializeField] private List<CardType> _startingCards;
         private List<CardView> _cardViews = new List<CardView>();
 
+        public List<CardType> StartingCards => _startingCards;
         public int Size => _cardViews.Count;
 
         private void OnEnable()

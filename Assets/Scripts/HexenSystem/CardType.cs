@@ -11,6 +11,7 @@ namespace HexenSystem
         Teleport,
         Slash,
         Push,
-        Shoot
+        Shoot,
+        Bomb
     }
 }

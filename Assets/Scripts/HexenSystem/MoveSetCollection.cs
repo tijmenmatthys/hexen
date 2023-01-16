@@ -19,6 +19,7 @@ namespace HexenSystem
             _moveSets.Add(CardType.Slash, new SlashMoveSet<TPiece>(board));
             _moveSets.Add(CardType.Push, new PushMoveSet<TPiece>(board));
             _moveSets.Add(CardType.Shoot, new ShootMoveSet<TPiece>(board));
+            _moveSets.Add(CardType.Bomb, new BombMoveSet<TPiece>(board));
         }
 
         public bool TryGetMoveSet(CardType card, out MoveSet<TPiece> moveSet)

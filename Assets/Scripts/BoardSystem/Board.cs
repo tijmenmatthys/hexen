@@ -30,7 +30,7 @@ namespace BoardSystem
 
         public Hex[] GetEmptyPositions()
         {
-            Hex[] allPositions = Hex.zero.GetNeighboursInRange(_size);
+            Hex[] allPositions = GetAllPositions();
             List<Hex> emptyPositions = new List<Hex>();
             foreach (Hex position in allPositions)
                 if (!TryGetPiece(position, out var piece))
@@ -38,6 +38,9 @@ namespace BoardSystem
 
             return emptyPositions.ToArray();
         }
+
+        public Hex[] GetAllPositions()
+            => Hex.zero.GetNeighboursInRange(_size);
 
         public bool IsValid(Hex position)
             => position.Length <= _size;
