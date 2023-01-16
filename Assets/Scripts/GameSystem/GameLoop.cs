@@ -17,9 +17,9 @@ namespace GameSystem
         void Start()
         {
             _gameStateMachine = new StateMachine<GameStateType>();
-            _gameStateMachine.Register(GameStateType.Play, new PlayState());
+            _gameStateMachine.Register(GameStateType.Play, new PlayState(true));
             _gameStateMachine.Register(GameStateType.MainMenu, new MainMenuState());
-            _gameStateMachine.SetInitialStateID(GameStateType.MainMenu);
+            _gameStateMachine.SetInitialStateID(GameStateType.Play);
         }
 
         

@@ -24,8 +24,11 @@ namespace GameSystem.GameStates
         private Deck<CardType> _deck;
         private Engine<PieceView> _engine;
 
-        public PlayState()
+        private bool _showMenuAfterLoad = false;
+
+        public PlayState(bool showMenuAfterFirstLoad = false)
         {
+            _showMenuAfterLoad = showMenuAfterFirstLoad;
         }
 
         public override void OnEnter()
@@ -36,6 +39,11 @@ namespace GameSystem.GameStates
                 InitViews();
                 SubscribeViewEvents();
                 InitModels();
+                if (_showMenuAfterLoad)
+                {
+                    _showMenuAfterLoad = false;
+                    StateMachine.Transition(GameStateType.MainMenu);
+                }
             };
         }
 
@@ -45,9 +53,17 @@ namespace GameSystem.GameStates
             SceneManager.UnloadSceneAsync(SceneName);
         }
 
-        public override void OnResume() => SubscribeViewEvents();
+        public override void OnResume()
+        {
+            SubscribeViewEvents();
+            _deckView.gameObject.SetActive(true);
+        }
 
-        public override void OnSuspend() => UnsubscribeViewEvents();
+        public override void OnSuspend()
+        {
+            UnsubscribeViewEvents();
+            _deckView.gameObject.SetActive(false);
+        }
 
         private void CardDropped(object sender, CardViewEventArgs e)
         {
